@@ -33,8 +33,8 @@ public class ReportDoctorConsultationListResource extends ServerResource {
         long diff = date.getTime() - date1.getTime();
         Long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
 
         List<Consultation> consultationList = doctorRepository.getConsultationList(doctorId, days);
         List<ConsultationRepresentation> consultationRepresentationList = new ArrayList<>();
@@ -42,7 +42,7 @@ public class ReportDoctorConsultationListResource extends ServerResource {
         for (Consultation p : consultationList)
             consultationRepresentationList.add(new ConsultationRepresentation(p));
 
-        em.close();
+        entityManager.close();
         return consultationRepresentationList;
 
     }

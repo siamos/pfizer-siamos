@@ -19,10 +19,10 @@ public class GlucoseListResource extends ServerResource {
     @Get("json")
     public List<GlucoseRepresentation> getGlucose() throws AuthorizationException {
         resource.ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        GlucoseRepository glucoseRepository = new GlucoseRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        GlucoseRepository glucoseRepository = new GlucoseRepository(entityManager);
         List<Glucose> glucoses = glucoseRepository.findAll(0,10);
-        em.close();
+        entityManager.close();
 
         List<GlucoseRepresentation> glucoseRepresentationList = new ArrayList<>();
         for (Glucose p : glucoses)
@@ -38,8 +38,8 @@ public class GlucoseListResource extends ServerResource {
 
         Glucose glucose = glucoseRepresentationIn.createGlucose();
         if (glucoseRepresentationIn.getDate() == null) glucose.setDate(new Date());
-        EntityManager em = JpaUtil.getEntityManager();
-        GlucoseRepository glucoseRepository = new GlucoseRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        GlucoseRepository glucoseRepository = new GlucoseRepository(entityManager);
         glucoseRepository.save(glucose);
         GlucoseRepresentation p = new GlucoseRepresentation(glucose);
         return p;

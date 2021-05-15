@@ -29,8 +29,8 @@ public class DoctorPatientListResource extends ServerResource {
     @Get("json")
     public List<PatientRepresentation> getPatientList() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         List<Patient> patientList = doctorRepository.getPatientList(this.doctorId);
         List<PatientRepresentation> patientRepresentationList = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public class DoctorPatientListResource extends ServerResource {
             patientRepresentationList.add(new PatientRepresentation(patient));
         }
 
-        em.close();
+        entityManager.close();
 
         return patientRepresentationList;
     }
@@ -48,15 +48,15 @@ public class DoctorPatientListResource extends ServerResource {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
         if (patientRepresentationIn == null) return null;
 
-        EntityManager em = JpaUtil.getEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
         patientRepresentationIn.setDoctorId(this.doctorId);
         PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
+                new PatientRepository(entityManager),
+                new DoctorRepository(entityManager),
+                new ChiefDoctorRepository(entityManager),
                 new ModelMapper());        Patient patient = patientService.createPatient(patientRepresentationIn);
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         patientRepository.save(patient);
         PatientRepresentation p = new PatientRepresentation(patient);
         return p;

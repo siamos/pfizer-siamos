@@ -28,8 +28,8 @@ public class DoctorInactiveListResource extends ServerResource {
         long diff = date.getTime() - date1.getTime();
         Long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         List<Doctor> doctorList = doctorRepository.getInactiveDoctor(days);
 
         List<DoctorRepresentation> doctorRepresentationList = new ArrayList<>();
@@ -37,7 +37,7 @@ public class DoctorInactiveListResource extends ServerResource {
         for (Doctor d : doctorList) {
             if (d != null) doctorRepresentationList.add(new DoctorRepresentation(d));
         }
-        em.close();
+        entityManager.close();
 
         return doctorRepresentationList;
     }

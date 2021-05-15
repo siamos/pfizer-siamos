@@ -19,8 +19,8 @@ public class ReportUnconsultedPatientDiffListResource extends ServerResource {
     @Get("json")
     public List<Long> getUnconsultedPatientDiffList() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         List<Date> dateList = doctorRepository.getNeedConsultationPatientDateList();
 
         List<Long> diff = new ArrayList<>();
@@ -29,7 +29,7 @@ public class ReportUnconsultedPatientDiffListResource extends ServerResource {
             Long difference = currDate.getTime() - d.getTime();
             diff.add(TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS) - 30);
         }
-        em.close();
+        entityManager.close();
 
         return diff;
     }

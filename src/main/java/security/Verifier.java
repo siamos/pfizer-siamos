@@ -16,9 +16,9 @@ import javax.persistence.EntityManager;
 public class Verifier extends SecretVerifier {
     public int verify(String username, char[] password) {
         //check db for user
-        EntityManager em = JpaUtil.getEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         Patient patient = patientRepository.getByUsername(username);
         if (patient != null) {
             if (patient.getUsername().equals(username)) {
@@ -27,12 +27,12 @@ public class Verifier extends SecretVerifier {
                     Request request = Request.getCurrent();
                     request.getClientInfo().getRoles().add
                             (new Role(patient.getRole()));
-                    em.close();
+                    entityManager.close();
                     return SecretVerifier.RESULT_VALID;
                 }
             }
         }
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         Doctor doctor = doctorRepository.getByUsername(username);
         if (doctor != null) {
             if (doctor.getUsername().equals(username)) {
@@ -41,13 +41,13 @@ public class Verifier extends SecretVerifier {
                     Request request = Request.getCurrent();
                     request.getClientInfo().getRoles().add
                             (new Role(doctor.getRole()));
-                    em.close();
+                    entityManager.close();
                     return SecretVerifier.RESULT_VALID;
                 }
             }
         }
 
-        ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(em);
+        ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(entityManager);
         ChiefDoctor chiefDoctor = chiefDoctorRepository.getByUsername(username);
         if (chiefDoctor != null) {
             if (chiefDoctor.getUsername().equals(username)) {
@@ -56,12 +56,12 @@ public class Verifier extends SecretVerifier {
                     Request request = Request.getCurrent();
                     request.getClientInfo().getRoles().add
                             (new Role(chiefDoctor.getRole()));
-                    em.close();
+                    entityManager.close();
                     return SecretVerifier.RESULT_VALID;
                 }
             }
         }
-        em.close();
+        entityManager.close();
         return SecretVerifier.RESULT_INVALID;
     }
 }

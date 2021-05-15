@@ -24,10 +24,10 @@ public class DoctorNeedConsultationPatientListResource extends ServerResource {
     @Get("json")
     public List<PatientRepresentation> getPatientList() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
 
 
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         List<Patient> patientList = doctorRepository.getNeedConsultationPatientList(this.doctorId);
 
         List<PatientRepresentation> patientRepresentationList = new ArrayList<>();
@@ -36,7 +36,7 @@ public class DoctorNeedConsultationPatientListResource extends ServerResource {
             patientRepresentationList.add(new PatientRepresentation(patient));
         }
 
-        em.close();
+        entityManager.close();
 
         return patientRepresentationList;
     }

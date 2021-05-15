@@ -14,20 +14,20 @@ import javax.persistence.EntityManager;
 
 public class CarbResource extends ServerResource {
     private long id;
-    private EntityManager em;
+    private EntityManager entityManager;
     protected void doInit() {
-        em = JpaUtil.getEntityManager();
+        entityManager = JpaUtil.getEntityManager();
         id = Long.parseLong(getAttribute("id"));
     }
 
     protected void doRelease() {
-        em.close();
+        entityManager.close();
     }
 
     @Get("json")
     public CarbRepresentation getCarb() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        CarbServiceImpl carbService = new CarbServiceImpl(new CarbRepository(em));
+        CarbServiceImpl carbService = new CarbServiceImpl(new CarbRepository(entityManager));
         return carbService.getCarb(id);
     }
 }

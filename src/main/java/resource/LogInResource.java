@@ -19,14 +19,14 @@ import java.util.List;
 
 public class LogInResource extends ServerResource {
 
-    private EntityManager em;
+    private EntityManager entityManager;
 
     protected void doInit() {
-        em = JpaUtil.getEntityManager();
+        entityManager = JpaUtil.getEntityManager();
     }
 
     protected void doRelease() {
-        em.close();
+        entityManager.close();
     }
 
     //change all the function login
@@ -34,9 +34,9 @@ public class LogInResource extends ServerResource {
     public List<Integer> logIn(LoginUserRepresentation userDto) {
 
         PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
+                new PatientRepository(entityManager),
+                new DoctorRepository(entityManager),
+                new ChiefDoctorRepository(entityManager),
                 new ModelMapper());
 
         if (userFailedValidation(userDto)) return null;
@@ -52,6 +52,6 @@ public class LogInResource extends ServerResource {
     }
 
     private boolean userFailedValidation(LoginUserRepresentation userDto) {
-        return userDto.getUsername().isEmpty() || userDto.getPassword().isEmpty();
+        return userDto.getUsername().isentityManagerpty() || userDto.getPassword().isentityManagerpty();
     }
 }

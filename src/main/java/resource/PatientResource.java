@@ -19,15 +19,15 @@ import javax.persistence.EntityManager;
 
 public class PatientResource extends ServerResource {
     private long id;
-    private EntityManager em;
+    private EntityManager entityManager;
 
     protected void doInit() {
-        em = JpaUtil.getEntityManager();
+        entityManager = JpaUtil.getEntityManager();
         id = Long.parseLong(getAttribute("id"));
     }
 
     protected void doRelease() {
-        em.close();
+        entityManager.close();
     }
 
 
@@ -35,9 +35,9 @@ public class PatientResource extends ServerResource {
     public PatientRepresentation getPatient() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
         PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
+                new PatientRepository(entityManager),
+                new DoctorRepository(entityManager),
+                new ChiefDoctorRepository(entityManager),
                 new ModelMapper());
 
         if (id <= 0) return null;
@@ -50,9 +50,9 @@ public class PatientResource extends ServerResource {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
 
         PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
+                new PatientRepository(entityManager),
+                new DoctorRepository(entityManager),
+                new ChiefDoctorRepository(entityManager),
                 new ModelMapper());
 
         Patient patient = patientService.updatePatient(id, patientRepresentation);
@@ -64,9 +64,9 @@ public class PatientResource extends ServerResource {
     public Boolean deletePatient() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
         PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
+                new PatientRepository(entityManager),
+                new DoctorRepository(entityManager),
+                new ChiefDoctorRepository(entityManager),
                 new ModelMapper());
 
         return patientService.deletePatient(id);

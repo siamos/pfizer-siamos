@@ -22,11 +22,11 @@ public class GlucoseResource extends ServerResource{
     @Get("json")
     public GlucoseRepresentation getGlucose() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em= JpaUtil.getEntityManager();
-        GlucoseRepository glucoseRepository= new GlucoseRepository(em);
+        EntityManager entityManager= JpaUtil.getEntityManager();
+        GlucoseRepository glucoseRepository= new GlucoseRepository(entityManager);
         Glucose glucose= glucoseRepository.read(id);
         GlucoseRepresentation glucoseRepresentation= new GlucoseRepresentation(glucose);
-        em.close();
+        entityManager.close();
         return glucoseRepresentation;
     }
 }

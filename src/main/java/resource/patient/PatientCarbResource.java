@@ -29,9 +29,9 @@ public class PatientCarbResource extends ServerResource {
     @Get("json")
     public CarbRepresentation getCarb() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
-        EntityManager em = JpaUtil.getEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Carb> carbList = patientRepository.getCarbList(this.patientId);
         Carb carb = new Carb();
 
@@ -41,7 +41,7 @@ public class PatientCarbResource extends ServerResource {
             }
         }
         CarbRepresentation carbRepresentation = new CarbRepresentation(carb);
-        em.close();
+        entityManager.close();
         return carbRepresentation;
     }
 
@@ -52,10 +52,10 @@ public class PatientCarbResource extends ServerResource {
 
         carbRepresentation.setId(carbId);
         carbRepresentation.setPatientId(patientId);
-        EntityManager em = JpaUtil.getEntityManager();
-        CarbRepository carbRepository = new CarbRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        CarbRepository carbRepository = new CarbRepository(entityManager);
         Carb carb = carbRepresentation.createCarb();
-        em.detach(carb);
+        entityManager.detach(carb);
         carb.setId(carbId);
         carbRepository.update(carb);
         return carbRepresentation;
@@ -64,8 +64,8 @@ public class PatientCarbResource extends ServerResource {
     @Delete("json")
     public void deleteCarb() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
-        EntityManager em = JpaUtil.getEntityManager();
-        CarbRepository carbRepository = new CarbRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        CarbRepository carbRepository = new CarbRepository(entityManager);
         carbRepository.delete(carbRepository.read(carbId));
     }
 }

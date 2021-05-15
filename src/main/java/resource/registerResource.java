@@ -16,13 +16,13 @@ import javax.persistence.EntityManager;
 
 public class registerResource extends ServerResource {
 
-    private EntityManager em;
+    private EntityManager entityManager;
     protected void doInit() {
-        em = JpaUtil.getEntityManager();
+        entityManager = JpaUtil.getEntityManager();
     }
 
     protected void doRelease() {
-        em.close();
+        entityManager.close();
     }
 
     @Post("json")
@@ -31,9 +31,9 @@ public class registerResource extends ServerResource {
         if (patientFailedValidation(patientRepresentationIn)) return null;
 
         PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
+                new PatientRepository(entityManager),
+                new DoctorRepository(entityManager),
+                new ChiefDoctorRepository(entityManager),
                 new ModelMapper());
 
         return patientService.createPatient(patientRepresentationIn);

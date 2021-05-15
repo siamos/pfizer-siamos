@@ -21,11 +21,11 @@ public class ChiefDoctorResource extends ServerResource {
     @Get("json")
     public ChiefDoctorRepresentation getChiefDoctor() throws AuthorizationException {
 //        ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(entityManager);
         ChiefDoctor chiefDoctor = chiefDoctorRepository.read(id);
         ChiefDoctorRepresentation chiefDoctorRepresentation = new ChiefDoctorRepresentation(chiefDoctor);
-        em.close();
+        entityManager.close();
         return chiefDoctorRepresentation;
     }
 }

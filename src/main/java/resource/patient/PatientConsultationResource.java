@@ -26,9 +26,9 @@ public class PatientConsultationResource extends ServerResource {
     @Get("json")
     public ConsultationRepresentation getConsultation() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
-        EntityManager em = JpaUtil.getEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Consultation> consultationList = patientRepository.getConsultationList(this.patientId);
         Consultation consultation = new Consultation();
         for (Consultation c : consultationList) {
@@ -37,7 +37,7 @@ public class PatientConsultationResource extends ServerResource {
             }
         }
         ConsultationRepresentation consultationRepresentation = new ConsultationRepresentation(consultation);
-        em.close();
+        entityManager.close();
         return consultationRepresentation;
     }
 

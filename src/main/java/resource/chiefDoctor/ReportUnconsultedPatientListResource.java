@@ -19,8 +19,8 @@ public class ReportUnconsultedPatientListResource extends ServerResource {
     @Get("json")
     public List<PatientRepresentation> getUnconsultedPatientList() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         List<Patient> patientList = doctorRepository.getNeedConsultationPatientList();
 
         List<PatientRepresentation> patientRepresentationList = new ArrayList<>();
@@ -29,7 +29,7 @@ public class ReportUnconsultedPatientListResource extends ServerResource {
             patientRepresentationList.add(new PatientRepresentation(patient));
         }
 
-        em.close();
+        entityManager.close();
 
         return patientRepresentationList;
     }

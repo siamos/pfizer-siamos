@@ -18,19 +18,19 @@ import java.util.List;
 
 public class CarbListResource extends ServerResource {
 
-    private EntityManager em;
+    private EntityManager entityManager;
     protected void doInit() {
-        em = JpaUtil.getEntityManager();
+        entityManager = JpaUtil.getEntityManager();
     }
 
     protected void doRelease() {
-        em.close();
+        entityManager.close();
     }
 
     @Get("json")
     public List<CarbRepresentation> getCarb() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        CarbServiceImpl carbService = new CarbServiceImpl(new CarbRepository(em));
+        CarbServiceImpl carbService = new CarbServiceImpl(new CarbRepository(entityManager));
         List<Carb> carbs = carbService.findAllCarbs(0,10);
         return carbService.createCarbRepresentationList(carbs);
     }
@@ -43,8 +43,8 @@ public class CarbListResource extends ServerResource {
         Carb carb = carbRepresentationIn.createCarb();
         if (carb.getDate() == null) carb.setDate(new Date());
 
-        EntityManager em = JpaUtil.getEntityManager();
-        CarbRepository carbRepository = new CarbRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        CarbRepository carbRepository = new CarbRepository(entityManager);
         carbRepository.save(carb);
         CarbRepresentation p = new CarbRepresentation(carb);
         return p;

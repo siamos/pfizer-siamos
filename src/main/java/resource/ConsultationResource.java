@@ -22,11 +22,11 @@ public class ConsultationResource extends ServerResource {
     @Get("json")
     public ConsultationRepresentation getConsultation() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        ConsultationRepository consultationRepository = new ConsultationRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        ConsultationRepository consultationRepository = new ConsultationRepository(entityManager);
         Consultation consultation = consultationRepository.read(id);
         ConsultationRepresentation consultationRepresentation = new ConsultationRepresentation(consultation);
-        em.close();
+        entityManager.close();
         return consultationRepresentation;
     }
 }

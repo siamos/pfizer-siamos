@@ -27,9 +27,9 @@ public class DoctorPatientGlucoseListResource extends ServerResource {
     @Get("json")
     public List<GlucoseRepresentation> getGlucoseList() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Glucose> glucoseList = patientRepository.getGlucoseList(this.patientId);
         List<GlucoseRepresentation> glucoseRepresentationList = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class DoctorPatientGlucoseListResource extends ServerResource {
             glucoseRepresentationList.add(new GlucoseRepresentation(c));
         }
 
-        em.close();
+        entityManager.close();
         return glucoseRepresentationList;
     }
 
@@ -48,8 +48,8 @@ public class DoctorPatientGlucoseListResource extends ServerResource {
 
         glucoseRepresentationIn.setPatientId(this.patientId);
         Glucose glucose = glucoseRepresentationIn.createGlucose();
-        EntityManager em = JpaUtil.getEntityManager();
-        GlucoseRepository glucoseRepository = new GlucoseRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        GlucoseRepository glucoseRepository = new GlucoseRepository(entityManager);
         glucoseRepository.save(glucose);
         GlucoseRepresentation g = new GlucoseRepresentation(glucose);
         return g;

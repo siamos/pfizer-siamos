@@ -17,10 +17,10 @@ public class ChiefDoctorListResource extends ServerResource {
     @Get("json")
     public List<ChiefDoctorRepresentation> getChiefDoctor() throws AuthorizationException {
 //        ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(entityManager);
         List<ChiefDoctor> chiefDoctors = chiefDoctorRepository.findAll(0,10);
-        em.close();
+        entityManager.close();
 
         List<ChiefDoctorRepresentation> chiefDoctorRepresentationList = new ArrayList<>();
         for (ChiefDoctor p : chiefDoctors)
@@ -36,8 +36,8 @@ public class ChiefDoctorListResource extends ServerResource {
         if (chiefDoctorRepresentationIn.getName() == null) return null;
 
         ChiefDoctor chiefDoctor = chiefDoctorRepresentationIn.createChiefDoctor();
-        EntityManager em = JpaUtil.getEntityManager();
-        ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(entityManager);
         chiefDoctorRepository.save(chiefDoctor);
         ChiefDoctorRepresentation p = new ChiefDoctorRepresentation(chiefDoctor);
         return p;

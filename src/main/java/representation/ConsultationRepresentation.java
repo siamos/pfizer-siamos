@@ -48,9 +48,9 @@ public class ConsultationRepresentation {
         consultation.setDosage(dosage);
         consultation.setComment(comment);
 
-        EntityManager em = JpaUtil.getEntityManager();
-        PatientRepository patientRepository = new PatientRepository(em);
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        PatientRepository patientRepository = new PatientRepository(entityManager);
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         consultation.setPatient(patientRepository.read(patientId));
         consultation.setDoctor(doctorRepository.read(doctorId));
 

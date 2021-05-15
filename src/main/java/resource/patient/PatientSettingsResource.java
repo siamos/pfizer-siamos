@@ -22,16 +22,16 @@ import java.util.logging.Logger;
 
 public class PatientSettingsResource extends ServerResource {
     private long id;
-    private EntityManager em;
+    private EntityManager entityManager;
     public static final Logger LOGGER = Engine.getLogger(PatientSettingsResource.class);
     private PatientServiceImpl patientService;
 
     protected void doInit() {
-        em = JpaUtil.getEntityManager();
+        entityManager = JpaUtil.getEntityManager();
         patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
+                new PatientRepository(entityManager),
+                new DoctorRepository(entityManager),
+                new ChiefDoctorRepository(entityManager),
                 new ModelMapper());
         try {
             id = Long.parseLong(getAttribute("id"));
@@ -41,7 +41,7 @@ public class PatientSettingsResource extends ServerResource {
     }
 
     protected void doRelease() {
-        em.close();
+        entityManager.close();
     }
 
     @Get("json")
@@ -57,12 +57,12 @@ public class PatientSettingsResource extends ServerResource {
     public PatientRepresentation updatePatient(PatientRepresentation patientRepresentation) throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
 
-        EntityManager em = JpaUtil.getEntityManager();
-        PatientRepository patientRepository = new PatientRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        PatientRepository patientRepository = new PatientRepository(entityManager);
 
         Patient patient = patientService.createPatient(patientRepresentation);
         Patient oldPatient = patientRepository.read(id);
-        em.detach(patient);
+        entityManager.detach(patient);
         patient.setId(id);
         patient.setDateRegistered(oldPatient.getDateRegistered());
         patientRepository.update(patient);

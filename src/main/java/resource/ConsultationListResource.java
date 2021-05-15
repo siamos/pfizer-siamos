@@ -19,10 +19,10 @@ public class ConsultationListResource extends ServerResource {
     @Get("json")
     public List<ConsultationRepresentation> getConsultation() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        ConsultationRepository consultationRepository = new ConsultationRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        ConsultationRepository consultationRepository = new ConsultationRepository(entityManager);
         List<Consultation> consultationList = consultationRepository.findAll(0,10);
-        em.close();
+        entityManager.close();
 
         List<ConsultationRepresentation> consultationRepresentationList = new ArrayList<>();
         for (Consultation p : consultationList)
@@ -39,8 +39,8 @@ public class ConsultationListResource extends ServerResource {
         Consultation consultation = consultationRepresentationIn.createConsultation();
         if (consultation.getDate() == null) consultation.setDate(new Date());
 
-        EntityManager em = JpaUtil.getEntityManager();
-        ConsultationRepository consultationListRepository = new ConsultationRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        ConsultationRepository consultationListRepository = new ConsultationRepository(entityManager);
         consultationListRepository.save(consultation);
         ConsultationRepresentation p = new ConsultationRepresentation(consultation);
 

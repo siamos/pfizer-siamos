@@ -29,8 +29,8 @@ public class DoctorConsultationResource extends ServerResource {
     @Get("json")
     public ConsultationRepresentation getConsultation() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         List<Consultation> consultationList = doctorRepository.getConsultationList(this.doctorId);
         Consultation consultation = new Consultation();
 
@@ -40,7 +40,7 @@ public class DoctorConsultationResource extends ServerResource {
             }
         }
         ConsultationRepresentation consultationRepresentation = new ConsultationRepresentation(consultation);
-        em.close();
+        entityManager.close();
 
         return consultationRepresentation;
     }
@@ -49,14 +49,14 @@ public class DoctorConsultationResource extends ServerResource {
     public ConsultationRepresentation updateConsultation(ConsultationRepresentation consultationRepresentation) throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
         if (consultationRepresentation == null) return null;
-        EntityManager em = JpaUtil.getEntityManager();
-        ConsultationRepository consultationRepository = new ConsultationRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        ConsultationRepository consultationRepository = new ConsultationRepository(entityManager);
         Consultation consultation = consultationRepresentation.createConsultation();
-        em.detach(consultation);
+        entityManager.detach(consultation);
         consultation.setId(consultationId);
         consultationRepository.update(consultation);
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         Patient patient = patientRepository.read(consultationRepresentation.getPatientId());
         patient.setConsultationChanged(true);
         patientRepository.update(patient);

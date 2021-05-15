@@ -28,8 +28,8 @@ public class DoctorConsultationListResource extends ServerResource {
     @Get("json")
     public List<ConsultationRepresentation> getConsultationList() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         List<Consultation> consultationList = doctorRepository.getConsultationList(this.doctorId);
         List<ConsultationRepresentation> consultationRepresentationList = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class DoctorConsultationListResource extends ServerResource {
             consultationRepresentationList.add(new ConsultationRepresentation(consultation));
         }
 
-        em.close();
+        entityManager.close();
 
         return consultationRepresentationList;
     }
@@ -49,14 +49,14 @@ public class DoctorConsultationListResource extends ServerResource {
 
         consultationRepresentationIn.setDoctorId(this.doctorId);
         Consultation consultation = consultationRepresentationIn.createConsultation();
-        EntityManager em = JpaUtil.getEntityManager();
-        ConsultationRepository consultationRepository = new ConsultationRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        ConsultationRepository consultationRepository = new ConsultationRepository(entityManager);
         consultationRepository.save(consultation);
         ConsultationRepresentation c = new ConsultationRepresentation(consultation);
 
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         Doctor doctor = doctorRepository.read(doctorId);
-        em.detach(doctor);
+        entityManager.detach(doctor);
         doctor.setRecentConsultation(new Date());
         doctorRepository.update(doctor);
 

@@ -28,9 +28,9 @@ public class DoctorPatientCarbListResource extends ServerResource {
     @Get("json")
     public List<CarbRepresentation> getCarbList() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Carb> carbList = patientRepository.getCarbList(this.patientId);
         List<CarbRepresentation> carbRepresentationList = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public class DoctorPatientCarbListResource extends ServerResource {
             carbRepresentationList.add(new CarbRepresentation(c));
         }
 
-        em.close();
+        entityManager.close();
         return carbRepresentationList;
     }
 
@@ -49,8 +49,8 @@ public class DoctorPatientCarbListResource extends ServerResource {
 
         carbRepresentationIn.setPatientId(this.patientId);
         Carb carb = carbRepresentationIn.createCarb();
-        EntityManager em = JpaUtil.getEntityManager();
-        CarbRepository carbRepository = new CarbRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        CarbRepository carbRepository = new CarbRepository(entityManager);
         carbRepository.save(carb);
         CarbRepresentation c = new CarbRepresentation(carb);
         return c;

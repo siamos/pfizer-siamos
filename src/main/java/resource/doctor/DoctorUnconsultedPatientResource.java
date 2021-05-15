@@ -30,8 +30,8 @@ public class DoctorUnconsultedPatientResource extends ServerResource {
     @Get("json")
     public PatientRepresentation getPatient() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         List<Patient> patientList = doctorRepository.getUnconsultedPatientList();
 
 
@@ -43,7 +43,7 @@ public class DoctorUnconsultedPatientResource extends ServerResource {
         }
         PatientRepresentation patientRepresentation = new PatientRepresentation(patient);
 
-        em.close();
+        entityManager.close();
 
         return patientRepresentation;
     }
@@ -51,15 +51,15 @@ public class DoctorUnconsultedPatientResource extends ServerResource {
     @Put("json")
     public PatientRepresentation updatePatient(PatientRepresentation patientRepresentation) throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        PatientRepository patientRepository = new PatientRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
+                new PatientRepository(entityManager),
+                new DoctorRepository(entityManager),
+                new ChiefDoctorRepository(entityManager),
                 new ModelMapper());
         Patient patient = patientService.createPatient(patientRepresentation);
-        em.detach(patient);
+        entityManager.detach(patient);
         patient.setId(unconsultedPatientId);
         patientRepository.update(patient);
         return patientRepresentation;

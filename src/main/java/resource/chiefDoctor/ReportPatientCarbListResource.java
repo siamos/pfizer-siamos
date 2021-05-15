@@ -34,13 +34,13 @@ public class ReportPatientCarbListResource extends ServerResource {
         Long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
 
-        EntityManager em = JpaUtil.getEntityManager();
-        PatientRepository patientRepository = new PatientRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Carb> carbList = patientRepository.getCarbList(patientId, days);
         List<CarbRepresentation> carbRepresentationList = new ArrayList<>();
         for (Carb p : carbList)
             carbRepresentationList.add(new CarbRepresentation(p));
-        em.close();
+        entityManager.close();
         return carbRepresentationList;
     }
 }

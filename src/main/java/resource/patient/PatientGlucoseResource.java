@@ -29,8 +29,8 @@ public class PatientGlucoseResource extends ServerResource {
     @Get("json")
     public GlucoseRepresentation getGlucose() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
-        EntityManager em = JpaUtil.getEntityManager();
-        PatientRepository patientRepository = new PatientRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Glucose> glucoseList = patientRepository.getGlucoseList(this.patientId);
         Glucose glucose = new Glucose();
         for (Glucose g : glucoseList) {
@@ -39,7 +39,7 @@ public class PatientGlucoseResource extends ServerResource {
             }
         }
         GlucoseRepresentation glucoseRepresentation = new GlucoseRepresentation(glucose);
-        em.close();
+        entityManager.close();
         return glucoseRepresentation;
     }
 
@@ -48,12 +48,12 @@ public class PatientGlucoseResource extends ServerResource {
         ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
         if (glucoseRepresentationIn == null) return null;
 
-        EntityManager em = JpaUtil.getEntityManager();
-        GlucoseRepository glucoseRepository = new GlucoseRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        GlucoseRepository glucoseRepository = new GlucoseRepository(entityManager);
         Glucose glucose = glucoseRepository.read(glucoseId);
         glucose.setGlucose(glucoseRepresentationIn.getGlucose());
 
-        em.detach(glucose);
+        entityManager.detach(glucose);
         glucose.setId(glucoseId);
         glucoseRepository.update(glucose);
         return glucoseRepresentationIn;
@@ -62,8 +62,8 @@ public class PatientGlucoseResource extends ServerResource {
     @Delete("json")
     public void deleteGlucose() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
-        EntityManager em = JpaUtil.getEntityManager();
-        GlucoseRepository glucoseRepository = new GlucoseRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        GlucoseRepository glucoseRepository = new GlucoseRepository(entityManager);
         glucoseRepository.delete(glucoseRepository.read(glucoseId));
     }
 }

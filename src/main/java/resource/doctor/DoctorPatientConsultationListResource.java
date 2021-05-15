@@ -30,9 +30,9 @@ public class DoctorPatientConsultationListResource extends ServerResource {
     @Get("json")
     public List<ConsultationRepresentation> getConsultationList() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Consultation> consultationList = patientRepository.getConsultationList(this.patientId);
         List<ConsultationRepresentation> consultationRepresentationList = new ArrayList<>();
 
@@ -40,7 +40,7 @@ public class DoctorPatientConsultationListResource extends ServerResource {
             consultationRepresentationList.add(new ConsultationRepresentation(c));
         }
 
-        em.close();
+        entityManager.close();
         return consultationRepresentationList;
     }
 
@@ -51,23 +51,23 @@ public class DoctorPatientConsultationListResource extends ServerResource {
 
         consultationRepresentationIn.setPatientId(this.patientId);
         Consultation consultation = consultationRepresentationIn.createConsultation();
-        EntityManager em = JpaUtil.getEntityManager();
-        ConsultationRepository consultationRepository = new ConsultationRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        ConsultationRepository consultationRepository = new ConsultationRepository(entityManager);
         consultationRepository.save(consultation);
         ConsultationRepresentation c = new ConsultationRepresentation(consultation);
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         Patient patient = patientRepository.read(patientId);
 
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         patient.setDoctor(doctorRepository.read(consultationRepresentationIn.getDoctorId()));
         patient.setRecentConsultation(consultationRepresentationIn.getDate());
 
-        em.detach(patient);
+        entityManager.detach(patient);
         patientRepository.update(patient);
 
         Doctor doctor = doctorRepository.read(consultationRepresentationIn.getDoctorId());
-        em.detach(doctor);
+        entityManager.detach(doctor);
         doctor.setRecentConsultation(consultationRepresentationIn.getDate());
         doctorRepository.update(doctor);
 

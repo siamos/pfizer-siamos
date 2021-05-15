@@ -33,13 +33,13 @@ public class ReportPatientGlucoseListResource extends ServerResource {
         long diff = date.getTime() - date1.getTime();
         Long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
-        EntityManager em = JpaUtil.getEntityManager();
-        PatientRepository patientRepository = new PatientRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Glucose> glucoseList = patientRepository.getGlucoseList(patientId, days);
         List<GlucoseRepresentation> glucoseRepresentationList = new ArrayList<>();
         for (Glucose glucose : glucoseList)
             glucoseRepresentationList.add(new GlucoseRepresentation(glucose));
-        em.close();
+        entityManager.close();
         return glucoseRepresentationList;
     }
 }

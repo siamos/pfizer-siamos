@@ -29,8 +29,8 @@ public class PatientInactiveListResource extends ServerResource {
         long diff = date.getTime() - date1.getTime();
         Long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
-        EntityManager em = JpaUtil.getEntityManager();
-        PatientRepository patientRepository = new PatientRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Patient> patientCarbList = patientRepository.getInactiveCarbPatient(days);
         List<Patient> patientGlucoseList = patientRepository.getInactiveGlucosePatient(days);
 
@@ -49,7 +49,7 @@ public class PatientInactiveListResource extends ServerResource {
                 }
             }
         }
-        em.close();
+        entityManager.close();
 
         return patientRepresentationList;
     }

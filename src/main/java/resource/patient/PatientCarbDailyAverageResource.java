@@ -28,12 +28,12 @@ public class PatientCarbDailyAverageResource extends ServerResource {
         Date dateStart = ResourceUtils.stringToDate(start, -1);
         Date dateEnd = ResourceUtils.stringToDate(end, 1);
 
-        EntityManager em = JpaUtil.getEntityManager();
+        EntityManager entityManager = JpaUtil.getEntityManager();
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         List<Double> carbList = patientRepository.getCarbAverageList(this.patientId, dateStart, dateEnd);
 
-        em.close();
+        entityManager.close();
         return carbList;
     }
 }

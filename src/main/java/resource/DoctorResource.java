@@ -24,21 +24,21 @@ public class DoctorResource extends ServerResource {
     @Get("json")
     public DoctorRepresentation getDoctor() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         Doctor doctor = doctorRepository.read(id);
         DoctorRepresentation doctorRepresentation = new DoctorRepresentation(doctor);
-        em.close();
+        entityManager.close();
         return doctorRepresentation;
     }
 
     @Put("json")
     public DoctorRepresentation updateDoctor(DoctorRepresentation doctorRepresentation) throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         Doctor doctor = doctorRepresentation.createDoctor();
-        em.detach(doctor);
+        entityManager.detach(doctor);
         doctor.setId(id);
         doctorRepository.update(doctor);
         return doctorRepresentation;
@@ -47,8 +47,8 @@ public class DoctorResource extends ServerResource {
     @Delete("json")
     public void deleteDoctor() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         doctorRepository.delete(doctorRepository.read(id));
     }
 

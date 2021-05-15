@@ -13,7 +13,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class CarbRepresentation implements IDto{
+public class CarbRepresentation {
     private long id;
     private double carb;
     private Date date;
@@ -37,8 +37,8 @@ public class CarbRepresentation implements IDto{
     }
 
     public Carb createCarb() {
-        EntityManager em = JpaUtil.getEntityManager();
-        CarbRepository carbRepository = new CarbRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        CarbRepository carbRepository = new CarbRepository(entityManager);
         Carb carb = new Carb();
 
         carb.setCarb(this.carb);
@@ -50,7 +50,7 @@ public class CarbRepresentation implements IDto{
         carb.setSimpleDate(carbRepository.getSimpleDate(carb.getDate()));
 
 
-        PatientRepository patientRepository = new PatientRepository(em);
+        PatientRepository patientRepository = new PatientRepository(entityManager);
         carb.setPatient(patientRepository.read(patientId));
         return carb;
     }

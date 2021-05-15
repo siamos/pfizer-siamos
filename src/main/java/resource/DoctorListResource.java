@@ -19,10 +19,10 @@ public class DoctorListResource extends ServerResource {
     public List<DoctorRepresentation> getDoctor() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_CHIEF_DOCTOR);
 
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         List<Doctor> doctors = doctorRepository.findAll(0,10);
-        em.close();
+        entityManager.close();
 
         List<DoctorRepresentation> doctorRepresentationList = new ArrayList<>();
         for (Doctor p : doctors)
@@ -39,8 +39,8 @@ public class DoctorListResource extends ServerResource {
         if (doctorRepresentationIn.getPassword() == null) return null;
 
         Doctor doctor = doctorRepresentationIn.createDoctor();
-        EntityManager em = JpaUtil.getEntityManager();
-        DoctorRepository doctorRepository = new DoctorRepository(em);
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        DoctorRepository doctorRepository = new DoctorRepository(entityManager);
         doctorRepository.save(doctor);
         DoctorRepresentation p = new DoctorRepresentation(doctor);
         return p;
