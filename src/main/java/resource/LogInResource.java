@@ -20,9 +20,15 @@ import java.util.List;
 public class LogInResource extends ServerResource {
 
     private EntityManager entityManager;
+    private PatientServiceImpl patientService;
 
     protected void doInit() {
         entityManager = JpaUtil.getEntityManager();
+        patientService = new PatientServiceImpl(
+                new PatientRepository(entityManager),
+                new DoctorRepository(entityManager),
+                new ChiefDoctorRepository(entityManager),
+                new ModelMapper());
     }
 
     protected void doRelease() {
@@ -32,12 +38,6 @@ public class LogInResource extends ServerResource {
     //change all the function login
     @Post("json")
     public List<Integer> logIn(LoginUserRepresentation userDto) {
-
-        PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(entityManager),
-                new DoctorRepository(entityManager),
-                new ChiefDoctorRepository(entityManager),
-                new ModelMapper());
 
         if (userFailedValidation(userDto)) return null;
 
