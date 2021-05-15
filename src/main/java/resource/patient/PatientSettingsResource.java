@@ -24,9 +24,15 @@ public class PatientSettingsResource extends ServerResource {
     private long id;
     private EntityManager em;
     public static final Logger LOGGER = Engine.getLogger(PatientSettingsResource.class);
+    private PatientServiceImpl patientService;
 
     protected void doInit() {
         em = JpaUtil.getEntityManager();
+        patientService = new PatientServiceImpl(
+                new PatientRepository(em),
+                new DoctorRepository(em),
+                new ChiefDoctorRepository(em),
+                new ModelMapper());
         try {
             id = Long.parseLong(getAttribute("id"));
         } catch (Exception e) {
@@ -42,12 +48,6 @@ public class PatientSettingsResource extends ServerResource {
     public PatientRepresentation getPatient() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
 
-        PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
-                new ModelMapper());
-
         if (id <= 0) return null;
 
         return patientService.getPatient(id);
@@ -59,12 +59,6 @@ public class PatientSettingsResource extends ServerResource {
 
         EntityManager em = JpaUtil.getEntityManager();
         PatientRepository patientRepository = new PatientRepository(em);
-
-        PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
-                new ModelMapper());
 
         Patient patient = patientService.createPatient(patientRepresentation);
         Patient oldPatient = patientRepository.read(id);
@@ -79,12 +73,6 @@ public class PatientSettingsResource extends ServerResource {
     @Delete("json")
     public Boolean deletePatient() throws AuthorizationException {
         ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
-
-        PatientServiceImpl patientService = new PatientServiceImpl(
-                new PatientRepository(em),
-                new DoctorRepository(em),
-                new ChiefDoctorRepository(em),
-                new ModelMapper());
 
         if (id <= 0) return false;
 
