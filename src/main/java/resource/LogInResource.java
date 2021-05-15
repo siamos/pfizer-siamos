@@ -52,6 +52,6 @@ public class LogInResource extends ServerResource {
     }
 
     private boolean userFailedValidation(LoginUserRepresentation userDto) {
-        return userDto.getUsername().isentityManagerpty() || userDto.getPassword().isentityManagerpty();
+        return userDto.getUsername().isEmpty() || userDto.getPassword().isEmpty();
     }
 }
